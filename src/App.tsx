@@ -5,13 +5,16 @@ import { Convo } from "./components/convo/convo";
 import ChatInputForm from "./components/chatInputForm/chatInputForm";
 
 export default function App() {
-  const [input, setInput] = useState("");
+  const [submittedValue, setSubmittedValue] = useState([""]);
 
   return (
     <>
       <Header className="welcome" />
-      <Convo />
-      <ChatInputForm input={input} setInput={setInput} />
+      <Convo input={submittedValue} />
+      <ChatInputForm
+        submittedValue={submittedValue}
+        setSubmittedValue={setSubmittedValue}
+      />
     </>
   );
 }

@@ -1,13 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import "./chatInputForm.scss";
 
 export default function ChatInputForm({
-  input,
-  setInput,
+  submittedValue,
+  setSubmittedValue,
 }: {
-  input: string;
-  setInput: React.Dispatch<React.SetStateAction<string>>;
+  submittedValue: Array<string>;
+  setSubmittedValue: React.Dispatch<React.SetStateAction<Array<string>>>;
 }) {
+  const [input, setInput] = useState("");
+
+  function handleButtonClick(input: string) {
+    const message = input.trim();
+    if (message.length > 0) {
+      const nextValue = [...submittedValue, message];
+      setSubmittedValue(nextValue);
+      setInput("");
+    }
+  }
   return (
     <>
       <div className="chatform-container">
@@ -17,7 +27,7 @@ export default function ChatInputForm({
           id="input"
           onChange={(e) => setInput(e.target.value)}
         ></textarea>
-        <button onClick={() => setInput("")}>send</button>
+        <button onClick={() => handleButtonClick(input)}>send</button>
       </div>
     </>
   );
