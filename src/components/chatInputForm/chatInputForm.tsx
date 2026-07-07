@@ -28,6 +28,7 @@ export default function ChatInputForm({
           onChange={(e) => setInput(e.target.value)}
         ></textarea>
         <button onClick={() => handleButtonClick(input)}>send</button>
+        {/* we want to make it so that the user input from text gets sent to the AI tool*/}
       </div>
     </>
   );
