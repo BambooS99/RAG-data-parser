@@ -1,8 +1,8 @@
-type Sender = "user" | "assistant";
+export type Sender = "user" | "assistant";
 
-type ChatMessage = {
+export type ChatMessage = {
   id: string;
   text: string;
   sender: Sender;
-  CreatedAt: String;
+  createdAt: string;
 };
