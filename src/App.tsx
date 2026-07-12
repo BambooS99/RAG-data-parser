@@ -3,9 +3,10 @@ import Header from "./components/header/header";
 import "./App.css";
 import { Convo } from "./components/convo/convo";
 import ChatInputForm from "./components/chatInputForm/chatInputForm";
+import type { ChatMessage } from "./types/chat";
 
 export default function App() {
-  const [submittedValue, setSubmittedValue] = useState([""]);
+  const [submittedValue, setSubmittedValue] = useState<ChatMessage[]>([]);
 
   return (
     <>
