@@ -1,10 +1,11 @@
+import type { ChatMessage } from "../../types/chat";
 import ChatBubble from "../chatBubble/chatBubble";
 import "./convo.scss";
 
-export function Convo({ input }: { input: Array<string> }) {
-  const chatItems = input.map((message, index) => (
-    <li key={`${message} - ${index}`}>
-      <ChatBubble text={message} className="isme"></ChatBubble>
+export function Convo({ input }: { input: ChatMessage[] }) {
+  const chatItems = input.map((message) => (
+    <li key={message.id}>
+      <ChatBubble message={message}></ChatBubble>
     </li>
   ));
   return (
