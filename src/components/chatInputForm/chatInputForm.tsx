@@ -11,49 +11,63 @@ export default function ChatInputForm({
 }) {
   const [input, setInput] = useState("");
 
-  function handleButtonClick(input: string) {
+  async function sendPrompt(message: string) {
+    const url = "http://127.0.0.1:8000/chat";
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message }),
+    });
+    const data = await response.json();
+    console.log(data);
+  }
+
+  function handleSend() {
     const message = input.trim();
+    if (message.length === 0) return;
 
-    if (message.length > 0) {
-      const nextMessage: ChatMessage = {
-        id: crypto.randomUUID(), // later we will generate a user ID > store it in state > and then populate that in the chat.
-        text: message,
-        sender: "user",
-        createdAt: new Date().toISOString(),
-      };
+    const nextMessage: ChatMessage = {
+      id: crypto.randomUUID(),
+      text: message,
+      sender: "user",
+      createdAt: new Date().toISOString(),
+    };
 
-      const nextValue = [...submittedValue, nextMessage];
-      setSubmittedValue(nextValue);
-      setInput("");
+    setSubmittedValue([...submittedValue, nextMessage]);
+    setInput("");
+    sendPrompt(message);
+  }
 
-      async function sendPrompt(message: string) {
-        const url = "http://127.0.0.1:8000/chat";
-
-        const response = await fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ message }),
-        });
-        const data = await response.json();
-        console.log(data);
-      }
-      sendPrompt(message);
+  function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
     }
   }
+
   return (
-    <>
-      <div className="chatform-container">
+    <div className="chatform-container">
+      <div className="chatform-bar">
         <textarea
-          className="chat-form"
+          className="chatform-bar__input"
+          placeholder="Message RAG Data Parser..."
           value={input}
-          id="input"
           onChange={(e) => setInput(e.target.value)}
-        ></textarea>
-        <button onClick={() => handleButtonClick(input)}>send</button>
-        {/* we want to make it so that the user input from text gets sent to the AI tool*/}
+          onKeyDown={handleKeyDown}
+          rows={1}
+        />
+        <button
+          className="chatform-bar__send"
+          onClick={handleSend}
+          disabled={input.trim().length === 0}
+          aria-label="Send message"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 19V5" />
+            <path d="M5 12l7-7 7 7" />
+          </svg>
+        </button>
       </div>
-    </>
+    </div>
   );
 }

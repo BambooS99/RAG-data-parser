@@ -2,13 +2,13 @@ import type { ChatMessage } from "../../types/chat";
 import "./chatBubble.scss";
 
 export default function ChatBubble({ message }: { message: ChatMessage }) {
-  const isMe = message.sender === "user";
+  const isUser = message.sender === "user";
 
   return (
-    <>
-      <div className={`chat-bubble ${isMe ? "me" : "them"}`}>
+    <div className={`chat-bubble-row ${isUser ? "chat-bubble-row--user" : ""}`}>
+      <div className={`chat-bubble ${isUser ? "chat-bubble--user" : "chat-bubble--assistant"}`}>
         {message.text}
       </div>
-    </>
+    </div>
   );
 }

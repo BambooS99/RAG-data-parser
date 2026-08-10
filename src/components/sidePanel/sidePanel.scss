@@ -1,0 +1,13 @@
+.side-panel {
+  width: 220px;
+  flex-shrink: 0;
+  background: var(--color-surface);
+
+  &--left {
+    border-right: 1px solid var(--color-divider);
+  }
+
+  &--right {
+    border-left: 1px solid var(--color-divider);
+  }
+}

@@ -1,11 +1,10 @@
-import React from "react";
-
 import "./header.scss";
 
-export default function Header({ className }: { className: string }) {
+export default function Header() {
   return (
-    <div className="container">
-      <div className={className}>Welcome!</div>
-    </div>
+    <header className="app-header">
+      <div className="app-header__title">RAG Data Parser</div>
+      <div className="app-header__subtitle">Ask questions about your documents</div>
+    </header>
   );
 }

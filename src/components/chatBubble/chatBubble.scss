@@ -1,18 +1,28 @@
-.bubble {
-    display: inline-block;
-    max-width: 70%;
-    padding: 10px 14px;
-    border-radius: 18px;
-    line-height: 1.4;
-    word-wrap: break-word;
+.chat-bubble-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  &--user {
+    align-items: flex-end;
+  }
 }
 
-.me {
-    color: black;
-    margin-left: auto;
-}
+.chat-bubble {
+  max-width: 78%;
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  background: transparent;
+  color: var(--color-text);
 
-.them {
-    background-color: #e5e5ea;
-    color: black;
+  &--user {
+    border: 1px solid var(--color-accent);
+  }
+
+  &--assistant {
+    border: 1px solid var(--color-divider);
+  }
 }
