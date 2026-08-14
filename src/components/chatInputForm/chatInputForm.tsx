@@ -50,7 +50,7 @@ export default function ChatInputForm({
       <div className="chatform-bar">
         <textarea
           className="chatform-bar__input"
-          placeholder="Message RAG Data Parser..."
+          placeholder="Message Plant GPT..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
@@ -62,7 +62,16 @@ export default function ChatInputForm({
           disabled={input.trim().length === 0}
           aria-label="Send message"
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.75"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <path d="M12 19V5" />
             <path d="M5 12l7-7 7 7" />
           </svg>
