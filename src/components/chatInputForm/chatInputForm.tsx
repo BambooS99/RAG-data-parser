@@ -50,7 +50,7 @@ export default function ChatInputForm({
       <div className="chatform-bar">
         <textarea
           className="chatform-bar__input"
-          placeholder="Message Plant GPT..."
+          placeholder="Message Math GPT..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}

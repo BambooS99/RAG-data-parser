@@ -25,9 +25,70 @@ def health():
     return {"status": "ok"}
 
 @app.post("/chat")
-def chat(req: ChatRequest):
+def chat(req: ChatRequest) -> "ChatResponse":
     #we will replace this with our RAG logic
-    return {"reply": f"you said: {req.message}"}
+    message= req.message
+    classification = classify_problem(message)
+    solver = route_problem(classification)
+
+    return ChatResponse(
+        message = message,
+        classification = classification,
+        solver = solver,
+    )
+
+
+#classes
+
+
+"""this creates the shape of the classifier function's return"""
+class ClassificationResult(BaseModel):
+    problem_type:  str
+    normalized_input: str
+    confidence: float
+    needs_clarification: bool
+
+"""This creates the shape for the router"""
+class SolverResult(BaseModel):
+    solver_used: str
+    success: bool
+    result: str
+
+"""this prepares a shape of response for the user"""
+class ChatResponse(BaseModel):
+    message: str
+    classification: ClassificationResult
+    solver: SolverResult
+
+
+#functions
+
+"""classification function"""
+def classify_problem(message: str) -> ClassificationResult:
+    return ClassificationResult(
+        problem_type= "addition",
+        normalized_input = message,
+        confidence= 1.0,
+        needs_clarification= False,
+    )
+
+
+"""router function (/router)"""
+def route_problem(classification: ClassificationResult) -> SolverResult:
+   if classification.problem_type == "addition":
+       return SolverResult(
+           solver_used= "addition",
+           success= True,
+           result = classification.normalized_input,
+       )
+   else:
+       return SolverResult(
+       solver_used= "N/A",
+       success=False,
+       result= "",
+   )
+
+
 
 @app.get("/")
 def read_root():
