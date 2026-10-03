@@ -5,6 +5,7 @@ from api.solvers import arithmetic
 from dotenv import load_dotenv
 from typing import Literal 
 from anthropic import Anthropic
+from api import schemas
 
 load_dotenv()
 client = Anthropic()
@@ -39,30 +40,7 @@ app.add_middleware(
     allow_headers=["Authorization", "Content-Type"],
 )
 
-class ChatRequest(BaseModel):
-    message: str
 
-
-#classes
-
-"""this creates the shape of the classifier function's return"""
-class ClassificationResult(BaseModel):
-    problem_type:  str
-    normalized_input: list [int | float]
-    confidence: float
-    needs_clarification: bool
-
-"""This creates the shape for the router"""
-class SolverResult(BaseModel):
-    solver_used: str
-    success: bool
-    result: int | float
-
-"""this prepares a shape of response for the user"""
-class ChatResponse(BaseModel):
-    message: str
-    classification: ClassificationResult
-    solver: SolverResult
 
 
 
@@ -71,13 +49,13 @@ def health():
     return {"status": "ok"}
 
 @app.post("/chat")
-def chat(req: ChatRequest) -> ChatResponse:
+def chat(req: schemas.ChatRequest) -> schemas.ChatResponse:
     #we will replace this with our RAG logic
     message= req.message
     classification = classify_problem(message)
     solver = route_problem(classification)
 
-    return ChatResponse(
+    return schemas.ChatResponse(
         message = message,
         classification = classification,
         solver = solver,
@@ -89,34 +67,35 @@ def chat(req: ChatRequest) -> ChatResponse:
 #functions
 
 """classification function"""
-def classify_problem(message: str) -> ClassificationResult:
+def classify_problem(message: str) -> schemas.ClassificationResult:
     response = client.messages.parse(
         model = "claude-haiku-4-5",
         max_tokens=256,
         system=CLASSIFIER_INSTRUCTIONS,
         messages=[{"role": "user", "content": message}],
-        output_format=ClassificationResult,
+        output_format=schemas.ClassificationResult,
     )
     return response.parsed_output
 
 
 """router function (/router)"""
-def route_problem(classification: ClassificationResult) -> SolverResult:
+def route_problem(classification: schemas.ClassificationResult) -> schemas.SolverResult:
    if classification.problem_type == "addition":
-       return SolverResult(
+       return schemas.SolverResult(
            solver_used= "addition",
            success= True,
            result = arithmetic.add(classification.normalized_input),
        )
    else:
-       return SolverResult(
+       return schemas.SolverResult(
        solver_used= "N/A",
        success=False,
-       result= "Please try again later. This feature is not currently supported",
+       error_message= "Please try again later. This feature is not currently supported",
    )
 
 
 
 @app.get("/")
+
 def read_root():
     return {"message": "welcome to the application"}
