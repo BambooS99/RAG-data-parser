@@ -1,10 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from api.solvers import arithmetic
 from dotenv import load_dotenv
 from anthropic import Anthropic
 from api import schemas
+from api.services import problem_router
 
 load_dotenv()
 client = Anthropic()
@@ -39,29 +39,21 @@ app.add_middleware(
     allow_headers=["Authorization", "Content-Type"],
 )
 
-
-
-
-
 @app.get("/health")
 def health():
     return {"status": "ok"}
 
 @app.post("/chat")
 def chat(req: schemas.ChatRequest) -> schemas.ChatResponse:
-    #we will replace this with our RAG logic
     message= req.message
     classification = classify_problem(message)
-    solver = route_problem(classification)
+    solver = problem_router.route_problem(classification)
 
     return schemas.ChatResponse(
         message = message,
         classification = classification,
         solver = solver,
     )
-
-
-
 
 #functions
 
@@ -77,33 +69,7 @@ def classify_problem(message: str) -> schemas.ClassificationResult:
     return response.parsed_output
 
 
-"""router function (/router)"""
-def route_problem(classification: schemas.ClassificationResult) -> schemas.SolverResult:
-   if classification.problem_type == "addition":
-       return schemas.SolverResult(
-           solver_used= "addition",
-           success= True,
-           result = arithmetic.add(classification.normalized_input),
-       )
-   if classification.problem_type == "multiplication":
-       return schemas.SolverResult(
-           solver_used= "multiplication",
-           success= True,
-           result = arithmetic.multiplication(classification.normalized_input),
-       )
-   if classification.problem_type == "subtraction" :
-       return schemas.SolverResult(
-           solver_used= "subtraction",
-           success= True,
-           result = arithmetic.subtract(classification.normalized_input),
-       )
-   
-   else:
-       return schemas.SolverResult(
-       solver_used= "N/A",
-       success=False,
-       error_message= "Please try again later. This feature is not currently supported",
-   )
+
 
 
 
