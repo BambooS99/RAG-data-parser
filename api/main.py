@@ -3,7 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from api.solvers import arithmetic
 from dotenv import load_dotenv
-from typing import Literal 
 from anthropic import Anthropic
 from api import schemas
 

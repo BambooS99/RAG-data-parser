@@ -17,3 +17,4 @@ def multiplication(numbers: list [int | float]) -> int | float:
     for i in numbers:
         res *= i
     return res
+
