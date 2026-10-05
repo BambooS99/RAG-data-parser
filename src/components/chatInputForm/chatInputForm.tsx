@@ -19,7 +19,19 @@ export default function ChatInputForm({
       body: JSON.stringify({ message }),
     });
     const data = await response.json();
-    console.log(data);
+
+    const replyText = data.solver.success
+      ? String(data.solver.result)
+      : (data.solver.error_message ?? "Sorry I couldn't solve that");
+
+    const assistantMessage: ChatMessage = {
+      id: crypto.randomUUID(),
+      text: replyText,
+      sender: "assistant",
+      createdAt: new Date().toISOString(),
+    };
+
+    setSubmittedValue((prev) => [...prev, assistantMessage]);
   }
 
   function handleSend() {
