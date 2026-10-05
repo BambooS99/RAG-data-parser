@@ -20,9 +20,6 @@ export function Convo({ input }: { input: ChatMessage[] }) {
             <div className="conversation-box__empty-title">
               Ask anything about your data
             </div>
-            {/* <div className="conversation-box__empty-subtitle">
-              Your documents have been indexed and are ready to query.
-            </div> */}
           </div>
         ) : (
           <ul className="chat-list">
