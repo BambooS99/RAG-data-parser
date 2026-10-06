@@ -10,28 +10,42 @@ export default function ChatInputForm({
   setSubmittedValue: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
 }) {
   const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   async function sendPrompt(message: string) {
     const url = "http://127.0.0.1:8000/chat";
-    const response = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message }),
-    });
-    const data = await response.json();
+    setIsLoading(true);
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message }),
+      });
+      const data = await response.json();
 
-    const replyText = data.solver.success
-      ? String(data.solver.result)
-      : (data.solver.error_message ?? "Sorry I couldn't solve that");
+      const replyText = data.solver.success
+        ? String(data.solver.result)
+        : (data.solver.error_message ?? "Sorry I couldn't solve that");
 
-    const assistantMessage: ChatMessage = {
-      id: crypto.randomUUID(),
-      text: replyText,
-      sender: "assistant",
-      createdAt: new Date().toISOString(),
-    };
+      const assistantMessage: ChatMessage = {
+        id: crypto.randomUUID(),
+        text: replyText,
+        sender: "assistant",
+        createdAt: new Date().toISOString(),
+      };
 
-    setSubmittedValue((prev) => [...prev, assistantMessage]);
+      setSubmittedValue((prev) => [...prev, assistantMessage]);
+    } catch {
+      const errorMessage: ChatMessage = {
+        id: crypto.randomUUID(),
+        text: "I couldnt get a valid response from the API. Please try again later",
+        sender: "assistant",
+        createdAt: new Date().toISOString(),
+      };
+      setSubmittedValue((prev) => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   function handleSend() {
@@ -49,6 +63,8 @@ export default function ChatInputForm({
     setInput("");
     sendPrompt(message);
   }
+
+  // understand this section deeply
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
     if (e.key === "Enter" && !e.shiftKey) {
