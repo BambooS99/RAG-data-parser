@@ -5,12 +5,15 @@ import type { ChatMessage } from "../../types/chat";
 export default function ChatInputForm({
   submittedValue,
   setSubmittedValue,
+  isLoading,
+  setIsLoading,
 }: {
+  isLoading: boolean;
   submittedValue: ChatMessage[];
   setSubmittedValue: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
+  setIsLoading: any;
 }) {
   const [input, setInput] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
   async function sendPrompt(message: string) {
     const url = "http://127.0.0.1:8000/chat";

@@ -2,8 +2,15 @@ import { useEffect, useRef } from "react";
 import type { ChatMessage } from "../../types/chat";
 import ChatBubble from "../chatBubble/chatBubble";
 import "./convo.scss";
+import LoadingSpinner from "../loading/loadingSpinner";
 
-export function Convo({ input }: { input: ChatMessage[] }) {
+export function Convo({
+  input,
+  isLoading,
+}: {
+  input: ChatMessage[];
+  isLoading: boolean;
+}) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -18,7 +25,7 @@ export function Convo({ input }: { input: ChatMessage[] }) {
         {input.length === 0 ? (
           <div className="conversation-box__empty">
             <div className="conversation-box__empty-title">
-              Ask anything about your data
+              Enter your math equation here!
             </div>
           </div>
         ) : (
@@ -28,6 +35,7 @@ export function Convo({ input }: { input: ChatMessage[] }) {
                 <ChatBubble message={message} />
               </li>
             ))}
+            {isLoading ? <LoadingSpinner /> : null}
           </ul>
         )}
       </div>
