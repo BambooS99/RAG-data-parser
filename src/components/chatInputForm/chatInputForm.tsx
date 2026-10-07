@@ -62,7 +62,7 @@ export default function ChatInputForm({
       createdAt: new Date().toISOString(),
     };
 
-    setSubmittedValue([...submittedValue, nextMessage]);
+    setSubmittedValue((prev) => [...prev, nextMessage]);
     setInput("");
     sendPrompt(message);
   }
